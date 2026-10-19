@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A research capstone exploring machine learning approaches for Google Search ranking and discoverability using the FlyRank ML Internship dataset.">
   <meta name="theme-color" content="#10172a">
-  <title>Google Search Ranking & Discoverability | Research Paper</title>
+  <title>Google Search Ranking &amp; Discoverability | Research Paper</title>
 
   <style>
     :root {
@@ -355,6 +355,7 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       background: #fff;
+      min-width: 0;
     }
 
     .metric-card strong {
@@ -368,6 +369,55 @@
     .metric-card span {
       color: var(--muted);
       font-size: 0.86rem;
+      overflow-wrap: anywhere;
+    }
+
+    /* Chart styles */
+    .chart-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 26px 0;
+      box-shadow: 0 8px 24px rgba(28, 39, 70, 0.04);
+      min-width: 0;
+    }
+
+    .chart-card h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 1.16rem;
+    }
+
+    .chart-card > p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 350px;
+    }
+
+    .chart-caption {
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .chart-insight {
+      background: #f0f3ff;
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 15px;
+      font-size: 0.92rem;
+      color: #374151;
     }
 
     .resource-card {
@@ -448,6 +498,14 @@
         grid-template-columns: 1fr;
       }
 
+      .chart-card {
+        padding: 15px;
+      }
+
+      .chart-container {
+        height: 300px;
+      }
+
       h2.section-title {
         font-size: 1.45rem;
       }
@@ -482,6 +540,10 @@
         box-shadow: none;
         border: none;
         padding: 0;
+      }
+
+      .chart-card, .metric-card {
+        break-inside: avoid;
       }
 
       .footer {
@@ -526,11 +588,13 @@
 
       <div class="hero-actions">
         <a class="button button-primary"
-           href="https://github.com/fareyahossain835-bit/flyrank-ml">
+           href="https://github.com/fareyahossain835-bit/flyrank-ml"
+           target="_blank" rel="noopener noreferrer">
           View GitHub Repository ↗
         </a>
         <a class="button button-secondary"
-           href="https://github.com/fareyahossain835-bit/flyrank-ml/blob/main/work/notebooks/capstone.ipynb">
+           href="https://github.com/fareyahossain835-bit/flyrank-ml/blob/main/work/notebooks/capstone.ipynb"
+           target="_blank" rel="noopener noreferrer">
           View Research Notebook
         </a>
         <a class="button button-secondary" href="#abstract">
@@ -578,11 +642,11 @@
             do not incorrectly treat non-consecutive months as adjacent.
             A baseline model, Logistic Regression, and Random Forest are
             compared using classification and ranking-oriented evaluation
-            metrics. In the current notebook results, Random Forest achieves
-            an accuracy of 0.5522, an F1-score of 0.5747, and a ROC-AUC of
-            0.5860. These results indicate a modest predictive signal and
-            motivate further validation rather than supporting claims of
-            reliable prediction or causal SEO impact.
+            metrics. In the currently reported notebook results, Random Forest
+            achieves an accuracy of 0.5522, an F1-score of 0.5747, and a
+            ROC-AUC of 0.5860. These results indicate a modest predictive
+            signal and motivate further validation rather than supporting
+            claims of reliable prediction or causal SEO impact.
           </p>
           <p>
             The study is intended as a decision-support experiment. It does not
@@ -616,9 +680,9 @@
           explanations of why search performance changed.
         </p>
         <p>
-          This project develops and evaluates a small comparative modelling
-          workflow using the approved FlyRank ML Internship dataset. It focuses
-          on temporal feature engineering, correct target alignment, model
+          This project develops and evaluates a comparative modelling workflow
+          using the approved FlyRank ML Internship dataset. It focuses on
+          temporal feature engineering, correct target alignment, model
           comparison, and transparent reporting of limitations.
         </p>
       </section>
@@ -627,33 +691,19 @@
         <h2 class="section-title">2. Research Objectives</h2>
         <p>The capstone addresses the following objectives:</p>
         <ol>
-          <li>
-            Prepare monthly search-performance observations for supervised
-            learning.
-          </li>
-          <li>
-            Construct historical features while preserving correct month-to-month
-            relationships.
-          </li>
-          <li>
-            Compare a baseline model with Logistic Regression and Random Forest.
-          </li>
-          <li>
-            Evaluate classification performance using multiple metrics instead
-            of relying on accuracy alone.
-          </li>
-          <li>
-            Assess whether the results are useful enough to justify further
-            experimentation and validation.
-          </li>
+          <li>Prepare monthly search-performance observations for supervised learning.</li>
+          <li>Construct historical features while preserving correct month-to-month relationships.</li>
+          <li>Compare a baseline model with Logistic Regression and Random Forest.</li>
+          <li>Evaluate classification performance using multiple metrics instead of relying on accuracy alone.</li>
+          <li>Assess whether the results justify further experimentation and validation.</li>
         </ol>
       </section>
 
       <section class="paper-section" id="data">
         <h2 class="section-title">3. Data and Responsible Use</h2>
         <p>
-          The experiment uses the approved, anonymized starter dataset supplied
-          for the FlyRank ML Internship. Records are aggregated into monthly
+          The experiment uses the approved starter dataset supplied for the
+          FlyRank ML Internship. Records are aggregated into monthly
           observations for the modelling workflow. Search-performance
           measurements provide the basis for historical features and the
           subsequent-period prediction target.
@@ -664,8 +714,8 @@
           Monthly observations must be aligned carefully. If an item has
           records for January and March but no February record, January must
           not be treated as the immediately preceding month for March. The
-          workflow therefore checks the previous month's date and excludes
-          invalid month transitions from lag-feature calculations.
+          workflow checks the previous month's date and excludes invalid
+          month transitions from lag-feature calculations.
         </p>
 
         <h3>Privacy and responsible use</h3>
@@ -716,27 +766,19 @@
 
         <h3>4.4 Models compared</h3>
         <ul>
-          <li>
-            <strong>Baseline:</strong> A reference model used to contextualize
-            the performance of the learned models.
-          </li>
-          <li>
-            <strong>Logistic Regression:</strong> A conventional classification
-            model that provides a comparatively simple benchmark.
-          </li>
-          <li>
-            <strong>Random Forest:</strong> An ensemble of decision trees that
-            can capture non-linear relationships between input features and
-            the target.
-          </li>
+          <li><strong>Baseline:</strong> A reference model used to contextualize the performance of the learned models.</li>
+          <li><strong>Logistic Regression:</strong> A conventional classification model that provides a comparatively simple benchmark.</li>
+          <li><strong>Random Forest:</strong> An ensemble of decision trees that can capture non-linear relationships between input features and the target.</li>
         </ul>
 
         <h3>4.5 Workflow overview</h3>
         <div class="note">
           <p>
-            <strong>Monthly records → Temporal validation → Feature engineering
-            → Future-target alignment → Model training → Evaluation →
-            Decision-support interpretation</strong>
+            <strong>
+              Monthly records → Temporal validation → Feature engineering
+              → Future-target alignment → Model training → Evaluation
+              → Decision-support interpretation
+            </strong>
           </p>
           <p>
             The goal is to identify candidates for further review, not to
@@ -752,29 +794,12 @@
           aspect of classification performance:
         </p>
         <ul>
-          <li>
-            <strong>Accuracy:</strong> The proportion of predictions that are
-            correct.
-          </li>
-          <li>
-            <strong>Precision:</strong> The proportion of predicted positive
-            cases that are actually positive.
-          </li>
-          <li>
-            <strong>Recall:</strong> The proportion of actual positive cases
-            identified by the model.
-          </li>
-          <li>
-            <strong>F1-score:</strong> The harmonic mean of precision and recall.
-          </li>
-          <li>
-            <strong>ROC-AUC:</strong> A measure of how well the model separates
-            positive and negative cases across classification thresholds.
-          </li>
-          <li>
-            <strong>Average Precision:</strong> A summary of the precision-recall
-            curve, useful when assessing positive-class retrieval.
-          </li>
+          <li><strong>Accuracy:</strong> The proportion of predictions that are correct.</li>
+          <li><strong>Precision:</strong> The proportion of predicted positive cases that are actually positive.</li>
+          <li><strong>Recall:</strong> The proportion of actual positive cases identified by the model.</li>
+          <li><strong>F1-score:</strong> The harmonic mean of precision and recall.</li>
+          <li><strong>ROC-AUC:</strong> A measure of how well the model separates positive and negative cases across classification thresholds.</li>
+          <li><strong>Average Precision:</strong> A summary of the precision-recall curve, useful when assessing positive-class retrieval.</li>
         </ul>
         <p>
           Accuracy alone is insufficient to determine whether a model is useful.
@@ -786,10 +811,9 @@
       <section class="paper-section" id="results">
         <h2 class="section-title">6. Results</h2>
         <p>
-          The current notebook output reports the following comparison. The
-          values below are shown as reported by the experiment; they should be
-          rechecked against the final, fully rerun notebook before formal
-          submission or external publication.
+          The following comparison uses the values reported in the current
+          notebook results. Verify them against the final, fully rerun notebook
+          before formal submission or external publication.
         </p>
 
         <div class="table-wrap">
@@ -852,7 +876,60 @@
           </div>
         </div>
 
-        <h3>6.1 Main observations</h3>
+        <!-- Chart 1 -->
+        <div class="chart-card">
+          <h3>6.1 Model Performance Comparison</h3>
+          <p>
+            Comparison of Accuracy, F1-score, and ROC-AUC across the three
+            models. Higher values indicate better performance for these metrics.
+          </p>
+
+          <div class="chart-container">
+            <canvas id="modelPerformanceChart"
+              role="img"
+              aria-label="Bar chart comparing Accuracy, F1-score and ROC-AUC for Baseline, Logistic Regression and Random Forest.">
+            </canvas>
+          </div>
+
+          <div class="chart-caption">
+            Figure 1. Classification metric comparison using the reported
+            notebook results. Hover over a bar to view its exact value.
+          </div>
+          <div class="chart-insight">
+            <strong>Observation:</strong> Random Forest has the highest reported
+            Accuracy, F1-score, and ROC-AUC among these three models. The
+            overall ROC-AUC remains modest, so further validation is needed.
+          </div>
+        </div>
+
+        <!-- Chart 2 -->
+        <div class="chart-card">
+          <h3>6.2 Precision vs Recall</h3>
+          <p>
+            Precision measures the proportion of predicted positive cases that
+            are correct. Recall measures the proportion of actual positive
+            cases identified by a model.
+          </p>
+
+          <div class="chart-container">
+            <canvas id="precisionRecallChart"
+              role="img"
+              aria-label="Bar chart comparing Precision and Recall for Baseline, Logistic Regression and Random Forest.">
+            </canvas>
+          </div>
+
+          <div class="chart-caption">
+            Figure 2. Precision and recall comparison using the reported
+            notebook results. Hover over a bar to view its exact value.
+          </div>
+          <div class="chart-insight">
+            <strong>Observation:</strong> Random Forest has the highest reported
+            recall in this comparison. Precision and recall should both be
+            considered when selecting a model for further evaluation.
+          </div>
+        </div>
+
+        <h3>6.3 Main observations</h3>
         <p>
           In the reported results, Random Forest has the highest accuracy,
           recall, F1-score, ROC-AUC, and Average Precision among the three
@@ -901,36 +978,12 @@
       <section class="paper-section" id="limitations">
         <h2 class="section-title">8. Limitations and Future Work</h2>
         <ul>
-          <li>
-            <strong>Modest performance:</strong> The current metrics indicate
-            limited predictive strength. Additional improvements and validation
-            are needed.
-          </li>
-          <li>
-            <strong>Temporal validation:</strong> Future work should evaluate
-            the model using a clearly documented time-based holdout or
-            walk-forward validation strategy to better simulate future use.
-          </li>
-          <li>
-            <strong>Class imbalance:</strong> The target distribution may affect
-            the interpretation of accuracy and other metrics. Evaluation should
-            continue to report class-sensitive measures.
-          </li>
-          <li>
-            <strong>Feature availability:</strong> Missing historical
-            observations can limit which features are available for an item.
-            This should be considered when interpreting predictions.
-          </li>
-          <li>
-            <strong>Generalizability:</strong> Results from the available
-            dataset may not generalize to different sites, industries, or
-            future periods.
-          </li>
-          <li>
-            <strong>Operational usefulness:</strong> A model score is not an
-            explanation of why a decline occurred. Analyst review and
-            additional evidence remain necessary.
-          </li>
+          <li><strong>Modest performance:</strong> The current metrics indicate limited predictive strength. Additional improvements and validation are needed.</li>
+          <li><strong>Temporal validation:</strong> Future work should evaluate the model using a clearly documented time-based holdout or walk-forward validation strategy.</li>
+          <li><strong>Class imbalance:</strong> The target distribution may affect the interpretation of accuracy and other metrics.</li>
+          <li><strong>Feature availability:</strong> Missing historical observations can limit which features are available for an item.</li>
+          <li><strong>Generalizability:</strong> Results from the available dataset may not generalize to different sites, industries, or future periods.</li>
+          <li><strong>Operational usefulness:</strong> A model score is not an explanation of why a decline occurred. Analyst review and additional evidence remain necessary.</li>
         </ul>
 
         <h3>Future directions</h3>
@@ -1026,10 +1079,148 @@
     <p>Machine Learning Research Capstone · Fareya Hossain</p>
     <p>
       Project materials:
-      <a href="https://github.com/fareyahossain835-bit/flyrank-ml">
+      <a href="https://github.com/fareyahossain835-bit/flyrank-ml"
+         target="_blank" rel="noopener noreferrer">
         GitHub repository
       </a>
     </p>
   </footer>
+
+  <!-- Chart.js: required for rendering interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    const modelNames = [
+      'Baseline',
+      'Logistic Regression',
+      'Random Forest'
+    ];
+
+    const chartColors = {
+      accuracy: '#6366f1',
+      f1: '#0ea5e9',
+      auc: '#8b5cf6',
+      precision: '#6366f1',
+      recall: '#0ea5e9'
+    };
+
+    // Shared chart configuration
+    const commonOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            padding: 18
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': ' +
+                context.parsed.y.toFixed(4);
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 1,
+          ticks: {
+            stepSize: 0.2
+          },
+          title: {
+            display: true,
+            text: 'Score (0–1)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            maxRotation: 0,
+            minRotation: 0
+          }
+        }
+      }
+    };
+
+    // Chart 1: Model Performance Comparison
+    const performanceCanvas =
+      document.getElementById('modelPerformanceChart');
+
+    if (performanceCanvas && typeof Chart !== 'undefined') {
+      new Chart(performanceCanvas, {
+        type: 'bar',
+        data: {
+          labels: modelNames,
+          datasets: [
+            {
+              label: 'Accuracy',
+              data: [0.5138, 0.5112, 0.5522],
+              backgroundColor: chartColors.accuracy,
+              borderRadius: 5
+            },
+            {
+              label: 'F1-score',
+              data: [0.4079, 0.4769, 0.5747],
+              backgroundColor: chartColors.f1,
+              borderRadius: 5
+            },
+            {
+              label: 'ROC-AUC',
+              data: [0.5154, 0.5218, 0.5860],
+              backgroundColor: chartColors.auc,
+              borderRadius: 5
+            }
+          ]
+        },
+        options: commonOptions
+      });
+    } else if (performanceCanvas) {
+      performanceCanvas.insertAdjacentText(
+        'afterend',
+        ' The chart could not load. Please check your internet connection and reload the page.'
+      );
+    }
+
+    // Chart 2: Precision vs Recall
+    const precisionRecallCanvas =
+      document.getElementById('precisionRecallChart');
+
+    if (precisionRecallCanvas && typeof Chart !== 'undefined') {
+      new Chart(precisionRecallCanvas, {
+        type: 'bar',
+        data: {
+          labels: modelNames,
+          datasets: [
+            {
+              label: 'Precision',
+              data: [0.5853, 0.5579, 0.5841],
+              backgroundColor: chartColors.precision,
+              borderRadius: 5
+            },
+            {
+              label: 'Recall',
+              data: [0.3131, 0.4165, 0.5655],
+              backgroundColor: chartColors.recall,
+              borderRadius: 5
+            }
+          ]
+        },
+        options: commonOptions
+      });
+    } else if (precisionRecallCanvas) {
+      precisionRecallCanvas.insertAdjacentText(
+        'afterend',
+        ' The chart could not load. Please check your internet connection and reload the page.'
+      );
+    }
+  </script>
 </body>
 </html>
+
