@@ -1,0 +1,1035 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A research capstone exploring machine learning approaches for Google Search ranking and discoverability using the FlyRank ML Internship dataset.">
+  <meta name="theme-color" content="#10172a">
+  <title>Google Search Ranking & Discoverability | Research Paper</title>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --ink: #172033;
+      --muted: #62708a;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --line: #e3e8f2;
+      --hero: #10172a;
+      --soft: #eef2ff;
+      --radius: 18px;
+      --shadow: 0 12px 35px rgba(28, 39, 70, 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.8;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .topbar {
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav {
+      max-width: 1180px;
+      min-height: 68px;
+      margin: auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero {
+      color: white;
+      background:
+        radial-gradient(ellipse at 85% 15%, rgba(99, 102, 241, 0.35), transparent 35%),
+        radial-gradient(ellipse at 10% 90%, rgba(14, 165, 233, 0.18), transparent 35%),
+        var(--hero);
+      padding: 90px 24px 82px;
+    }
+
+    .hero-inner {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      border: 1px solid rgba(165, 180, 252, 0.45);
+      background: rgba(99, 102, 241, 0.15);
+      color: #c7d2fe;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      max-width: 900px;
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      line-height: 1.12;
+      letter-spacing: -1.8px;
+      margin-bottom: 22px;
+    }
+
+    .hero-description {
+      max-width: 760px;
+      font-size: 1.12rem;
+      color: #cbd5e1;
+      margin-bottom: 28px;
+    }
+
+    .author {
+      color: #e2e8f0;
+      margin-bottom: 30px;
+    }
+
+    .author strong {
+      color: white;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .button-primary {
+      background: #818cf8;
+      color: #10172a;
+    }
+
+    .button-secondary {
+      border: 1px solid #475569;
+      color: white;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .page-layout {
+      max-width: 1180px;
+      margin: 42px auto 80px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 245px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 94px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 0 10px 12px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #44516a;
+      font-size: 0.91rem;
+    }
+
+    .sidebar a:hover {
+      background: var(--soft);
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .paper {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(22px, 4vw, 48px);
+      box-shadow: var(--shadow);
+    }
+
+    .paper-section {
+      margin-bottom: 42px;
+      scroll-margin-top: 95px;
+    }
+
+    .paper-section:last-child {
+      margin-bottom: 0;
+    }
+
+    h2.section-title {
+      font-size: 1.7rem;
+      line-height: 1.35;
+      letter-spacing: -0.6px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      color: #39465d;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0 18px;
+      color: #39465d;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .abstract-box {
+      background: #f0f3ff;
+      border: 1px solid #dfe5ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .abstract-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .keywords {
+      margin-top: 18px;
+      font-size: 0.93rem;
+    }
+
+    .keywords strong {
+      color: var(--ink);
+    }
+
+    .note {
+      border: 1px solid #dbeafe;
+      background: #f0f9ff;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+
+    .note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 650px;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f1f4fb;
+      color: #334155;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #f8faff;
+    }
+
+    .highlight-row {
+      background: #f1f5ff;
+      font-weight: 700;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .metric-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .metric-card strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 1.7rem;
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+
+    .metric-card span {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .resource-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin: 12px 0;
+    }
+
+    .resource-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .resource-card p {
+      margin: 0;
+      font-size: 0.94rem;
+    }
+
+    .footer {
+      background: var(--hero);
+      color: #cbd5e1;
+      text-align: center;
+      padding: 34px 20px;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: #a5b4fc;
+    }
+
+    .footer p {
+      color: #cbd5e1;
+      margin: 6px 0;
+    }
+
+    @media (max-width: 900px) {
+      .page-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .sidebar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+      }
+
+      .sidebar a {
+        padding: 6px 9px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+        gap: 12px;
+      }
+
+      .hero {
+        padding: 62px 20px;
+      }
+
+      .page-layout {
+        padding: 0 14px;
+        margin-top: 20px;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h2.section-title {
+        font-size: 1.45rem;
+      }
+    }
+
+    @media print {
+      .topbar, .sidebar, .hero-actions {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .hero {
+        background: white;
+        color: black;
+        padding: 25px 0;
+      }
+
+      .hero-description, .author, .hero-description strong {
+        color: #333;
+      }
+
+      .page-layout {
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+
+      .paper {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+      }
+
+      .footer {
+        background: white;
+        color: #333;
+      }
+
+      .footer p {
+        color: #333;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="nav">
+      <a class="brand" href="#top">FlyRank <span>Research</span></a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#abstract">Abstract</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#results">Results</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#resources">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="eyebrow">Machine Learning Research Capstone</div>
+      <h1>Google Search Ranking &amp; Discoverability</h1>
+      <p class="hero-description">
+        Exploring machine learning models for identifying search-performance
+        declines and supporting data-informed discoverability decisions.
+      </p>
+
+      <p class="author">
+        <strong>Author:</strong> Fareya Hossain<br>
+        <strong>Project:</strong> FlyRank ML Internship Capstone
+      </p>
+
+      <div class="hero-actions">
+        <a class="button button-primary"
+           href="https://github.com/fareyahossain835-bit/flyrank-ml">
+          View GitHub Repository ↗
+        </a>
+        <a class="button button-secondary"
+           href="https://github.com/fareyahossain835-bit/flyrank-ml/blob/main/work/notebooks/capstone.ipynb">
+          View Research Notebook
+        </a>
+        <a class="button button-secondary" href="#abstract">
+          Read the Paper ↓
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-layout">
+    <aside class="sidebar">
+      <h2>On this page</h2>
+      <nav aria-label="Paper contents">
+        <a href="#abstract">Abstract</a>
+        <a href="#introduction">1. Introduction</a>
+        <a href="#objectives">2. Objectives</a>
+        <a href="#data">3. Data and Ethics</a>
+        <a href="#methodology">4. Methodology</a>
+        <a href="#evaluation">5. Evaluation</a>
+        <a href="#results">6. Results</a>
+        <a href="#discussion">7. Discussion</a>
+        <a href="#limitations">8. Limitations</a>
+        <a href="#conclusion">9. Conclusion</a>
+        <a href="#resources">Reproducibility</a>
+        <a href="#acknowledgments">Data Credit</a>
+      </nav>
+    </aside>
+
+    <main class="paper">
+      <section class="paper-section" id="abstract">
+        <h2 class="section-title">Abstract</h2>
+        <div class="abstract-box">
+          <p>
+            Search visibility and discoverability can change over time.
+            Identifying items that may experience declining search performance
+            can help teams prioritize investigation and make better use of
+            limited analytical resources. This capstone explores a supervised
+            machine learning approach to identifying potential future
+            performance declines using historical search-performance data.
+          </p>
+          <p>
+            The workflow aggregates records into monthly observations, creates
+            historical features, and aligns each observation with a subsequent
+            month's target. A continuity check is applied so that lag features
+            do not incorrectly treat non-consecutive months as adjacent.
+            A baseline model, Logistic Regression, and Random Forest are
+            compared using classification and ranking-oriented evaluation
+            metrics. In the current notebook results, Random Forest achieves
+            an accuracy of 0.5522, an F1-score of 0.5747, and a ROC-AUC of
+            0.5860. These results indicate a modest predictive signal and
+            motivate further validation rather than supporting claims of
+            reliable prediction or causal SEO impact.
+          </p>
+          <p>
+            The study is intended as a decision-support experiment. It does not
+            attempt to reverse-engineer Google's ranking algorithm, guarantee
+            ranking improvements, or establish that any particular action
+            causes a search-performance change.
+          </p>
+        </div>
+        <p class="keywords">
+          <strong>Keywords:</strong> Machine Learning, Search Performance,
+          Discoverability, Classification, Random Forest, Logistic Regression,
+          Feature Engineering, Decision Support
+        </p>
+      </section>
+
+      <section class="paper-section" id="introduction">
+        <h2 class="section-title">1. Introduction</h2>
+        <p>
+          Search performance is influenced by many factors, and observed
+          changes in impressions, clicks, click-through rate, and average
+          position can be difficult to interpret at scale. Analysts may need
+          to review many items to determine which ones deserve closer
+          investigation. A structured analytical workflow can help prioritize
+          that review.
+        </p>
+        <p>
+          Machine learning offers one possible approach: learn patterns from
+          historical observations and estimate whether an item is likely to
+          meet a defined future-decline criterion. Such estimates should be
+          interpreted as signals for further investigation, not as definitive
+          explanations of why search performance changed.
+        </p>
+        <p>
+          This project develops and evaluates a small comparative modelling
+          workflow using the approved FlyRank ML Internship dataset. It focuses
+          on temporal feature engineering, correct target alignment, model
+          comparison, and transparent reporting of limitations.
+        </p>
+      </section>
+
+      <section class="paper-section" id="objectives">
+        <h2 class="section-title">2. Research Objectives</h2>
+        <p>The capstone addresses the following objectives:</p>
+        <ol>
+          <li>
+            Prepare monthly search-performance observations for supervised
+            learning.
+          </li>
+          <li>
+            Construct historical features while preserving correct month-to-month
+            relationships.
+          </li>
+          <li>
+            Compare a baseline model with Logistic Regression and Random Forest.
+          </li>
+          <li>
+            Evaluate classification performance using multiple metrics instead
+            of relying on accuracy alone.
+          </li>
+          <li>
+            Assess whether the results are useful enough to justify further
+            experimentation and validation.
+          </li>
+        </ol>
+      </section>
+
+      <section class="paper-section" id="data">
+        <h2 class="section-title">3. Data and Responsible Use</h2>
+        <p>
+          The experiment uses the approved, anonymized starter dataset supplied
+          for the FlyRank ML Internship. Records are aggregated into monthly
+          observations for the modelling workflow. Search-performance
+          measurements provide the basis for historical features and the
+          subsequent-period prediction target.
+        </p>
+
+        <h3>Temporal data preparation</h3>
+        <p>
+          Monthly observations must be aligned carefully. If an item has
+          records for January and March but no February record, January must
+          not be treated as the immediately preceding month for March. The
+          workflow therefore checks the previous month's date and excludes
+          invalid month transitions from lag-feature calculations.
+        </p>
+
+        <h3>Privacy and responsible use</h3>
+        <p>
+          The dataset's pseudonymous identifiers are used only where needed for
+          grouping, joining, or validation. They are not intended to serve as
+          predictive features, and no attempt is made to identify the underlying
+          entities.
+        </p>
+        <p>
+          This publication presents aggregate model metrics rather than raw
+          client-level records. It does not publish private client identifiers,
+          URLs, raw search queries, or unapproved data extracts.
+        </p>
+      </section>
+
+      <section class="paper-section" id="methodology">
+        <h2 class="section-title">4. Methodology</h2>
+
+        <h3>4.1 Data preparation and aggregation</h3>
+        <p>
+          Search-performance records are transformed into monthly observations.
+          The preparation workflow establishes the time period for each
+          observation and constructs the features used by the predictive
+          models. The modelling dataset covers feature months from January
+          2025 through May 2026, with corresponding target months from February
+          2025 through June 2026.
+        </p>
+
+        <h3>4.2 Feature engineering</h3>
+        <p>
+          Historical search-performance measurements are used to represent
+          prior behaviour. Lag features include previous-period impressions,
+          clicks, position, and click-through rate where valid historical
+          observations are available. Missing prior-period values are retained
+          as missing rather than being fabricated from non-consecutive months.
+        </p>
+
+        <h3>4.3 Target definition</h3>
+        <p>
+          The supervised target represents whether an observation meets the
+          project's defined future-decline criterion in the following month.
+          The target is shifted forward by one calendar month so that features
+          from a given month are not accidentally paired with a target from an
+          unrelated period. The precise decline rule is the one implemented
+          in the accompanying notebook.
+        </p>
+
+        <h3>4.4 Models compared</h3>
+        <ul>
+          <li>
+            <strong>Baseline:</strong> A reference model used to contextualize
+            the performance of the learned models.
+          </li>
+          <li>
+            <strong>Logistic Regression:</strong> A conventional classification
+            model that provides a comparatively simple benchmark.
+          </li>
+          <li>
+            <strong>Random Forest:</strong> An ensemble of decision trees that
+            can capture non-linear relationships between input features and
+            the target.
+          </li>
+        </ul>
+
+        <h3>4.5 Workflow overview</h3>
+        <div class="note">
+          <p>
+            <strong>Monthly records → Temporal validation → Feature engineering
+            → Future-target alignment → Model training → Evaluation →
+            Decision-support interpretation</strong>
+          </p>
+          <p>
+            The goal is to identify candidates for further review, not to
+            automate SEO decisions without human assessment.
+          </p>
+        </div>
+      </section>
+
+      <section class="paper-section" id="evaluation">
+        <h2 class="section-title">5. Evaluation Metrics</h2>
+        <p>
+          Several metrics are reported because each captures a different
+          aspect of classification performance:
+        </p>
+        <ul>
+          <li>
+            <strong>Accuracy:</strong> The proportion of predictions that are
+            correct.
+          </li>
+          <li>
+            <strong>Precision:</strong> The proportion of predicted positive
+            cases that are actually positive.
+          </li>
+          <li>
+            <strong>Recall:</strong> The proportion of actual positive cases
+            identified by the model.
+          </li>
+          <li>
+            <strong>F1-score:</strong> The harmonic mean of precision and recall.
+          </li>
+          <li>
+            <strong>ROC-AUC:</strong> A measure of how well the model separates
+            positive and negative cases across classification thresholds.
+          </li>
+          <li>
+            <strong>Average Precision:</strong> A summary of the precision-recall
+            curve, useful when assessing positive-class retrieval.
+          </li>
+        </ul>
+        <p>
+          Accuracy alone is insufficient to determine whether a model is useful.
+          Precision, recall, threshold behaviour, ranking performance, and the
+          practical cost of false positives and false negatives also matter.
+        </p>
+      </section>
+
+      <section class="paper-section" id="results">
+        <h2 class="section-title">6. Results</h2>
+        <p>
+          The current notebook output reports the following comparison. The
+          values below are shown as reported by the experiment; they should be
+          rechecked against the final, fully rerun notebook before formal
+          submission or external publication.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>ROC-AUC</th>
+                <th>Average Precision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Baseline</td>
+                <td>0.5138</td>
+                <td>0.5853</td>
+                <td>0.3131</td>
+                <td>0.4079</td>
+                <td>0.5154</td>
+                <td>0.5499</td>
+              </tr>
+              <tr>
+                <td>Logistic Regression</td>
+                <td>0.5112</td>
+                <td>0.5579</td>
+                <td>0.4165</td>
+                <td>0.4769</td>
+                <td>0.5218</td>
+                <td>0.5567</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>Random Forest</td>
+                <td>0.5522</td>
+                <td>0.5841</td>
+                <td>0.5655</td>
+                <td>0.5747</td>
+                <td>0.5860</td>
+                <td>0.5980</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric-card">
+            <strong>0.5522</strong>
+            <span>Random Forest accuracy</span>
+          </div>
+          <div class="metric-card">
+            <strong>0.5747</strong>
+            <span>Random Forest F1-score</span>
+          </div>
+          <div class="metric-card">
+            <strong>0.5860</strong>
+            <span>Random Forest ROC-AUC</span>
+          </div>
+        </div>
+
+        <h3>6.1 Main observations</h3>
+        <p>
+          In the reported results, Random Forest has the highest accuracy,
+          recall, F1-score, ROC-AUC, and Average Precision among the three
+          models. Its ROC-AUC of 0.5860 is above 0.5, but remains modest.
+          This suggests limited separation between the two classes rather
+          than strong predictive performance.
+        </p>
+        <p>
+          Logistic Regression has a lower F1-score than Random Forest in the
+          reported table. The baseline remains useful as a reference, since
+          a more complex model should only be preferred when its improvement
+          is consistent and meaningful under an appropriate validation design.
+        </p>
+        <p>
+          These findings should be treated as preliminary. They do not establish
+          that the model will generalize to new clients, future periods, or
+          different search environments.
+        </p>
+      </section>
+
+      <section class="paper-section" id="discussion">
+        <h2 class="section-title">7. Discussion</h2>
+        <p>
+          The comparison illustrates how historical search-performance features
+          can be used in a supervised classification workflow. The Random Forest
+          model performs best on several reported metrics, but the overall
+          performance is not strong enough to support unsupervised operational
+          decisions.
+        </p>
+        <p>
+          A practical use case would be to create a shortlist of items for
+          analyst review, then combine model output with domain knowledge and
+          additional evidence. Any such workflow would require a carefully
+          chosen threshold, validation on genuinely unseen periods or entities,
+          and monitoring for changes in data quality and performance.
+        </p>
+        <p>
+          The project also highlights the importance of correct temporal
+          preparation. Misaligned lag features can create misleading training
+          examples and undermine the validity of evaluation results. Calendar
+          continuity checks are therefore an essential part of the workflow,
+          not merely a technical detail.
+        </p>
+      </section>
+
+      <section class="paper-section" id="limitations">
+        <h2 class="section-title">8. Limitations and Future Work</h2>
+        <ul>
+          <li>
+            <strong>Modest performance:</strong> The current metrics indicate
+            limited predictive strength. Additional improvements and validation
+            are needed.
+          </li>
+          <li>
+            <strong>Temporal validation:</strong> Future work should evaluate
+            the model using a clearly documented time-based holdout or
+            walk-forward validation strategy to better simulate future use.
+          </li>
+          <li>
+            <strong>Class imbalance:</strong> The target distribution may affect
+            the interpretation of accuracy and other metrics. Evaluation should
+            continue to report class-sensitive measures.
+          </li>
+          <li>
+            <strong>Feature availability:</strong> Missing historical
+            observations can limit which features are available for an item.
+            This should be considered when interpreting predictions.
+          </li>
+          <li>
+            <strong>Generalizability:</strong> Results from the available
+            dataset may not generalize to different sites, industries, or
+            future periods.
+          </li>
+          <li>
+            <strong>Operational usefulness:</strong> A model score is not an
+            explanation of why a decline occurred. Analyst review and
+            additional evidence remain necessary.
+          </li>
+        </ul>
+
+        <h3>Future directions</h3>
+        <p>
+          Further work could include stronger temporal validation, calibration
+          analysis, threshold selection based on business costs, feature
+          importance analysis, and comparison with additional simple baselines.
+          The workflow should also be tested for stability across different
+          periods before being considered for practical deployment.
+        </p>
+      </section>
+
+      <section class="paper-section" id="conclusion">
+        <h2 class="section-title">9. Conclusion</h2>
+        <p>
+          This capstone explores a machine learning workflow for identifying
+          potential future search-performance declines using historical
+          monthly observations. It combines temporal feature engineering,
+          continuity validation, target alignment, and a comparison of a
+          baseline model, Logistic Regression, and Random Forest.
+        </p>
+        <p>
+          In the currently reported results, Random Forest performs best on
+          several evaluation metrics, although its overall predictive signal
+          remains modest. The experiment demonstrates a structured approach
+          to evaluating the task, while emphasizing that more rigorous
+          validation is needed before the results can support real-world
+          decisions.
+        </p>
+        <p>
+          The intended contribution is a transparent, reproducible
+          decision-support experiment—not a claim to predict Google's ranking
+          algorithm or guarantee search visibility improvements.
+        </p>
+      </section>
+
+      <section class="paper-section" id="resources">
+        <h2 class="section-title">Reproducibility and Resources</h2>
+        <p>
+          The repository and notebook provide the project materials and
+          implementation details for reviewing the analysis.
+        </p>
+
+        <div class="resource-card">
+          <strong>Project repository</strong>
+          <p>
+            <a href="https://github.com/fareyahossain835-bit/flyrank-ml"
+               target="_blank" rel="noopener noreferrer">
+              github.com/fareyahossain835-bit/flyrank-ml ↗
+            </a>
+          </p>
+        </div>
+
+        <div class="resource-card">
+          <strong>Capstone notebook</strong>
+          <p>
+            <a href="https://github.com/fareyahossain835-bit/flyrank-ml/blob/main/work/notebooks/capstone.ipynb"
+               target="_blank" rel="noopener noreferrer">
+              Open capstone.ipynb ↗
+            </a>
+          </p>
+        </div>
+
+        <div class="resource-card">
+          <strong>Responsible data use</strong>
+          <p>
+            <a href="https://github.com/fareyahossain835-bit/flyrank-ml/blob/main/DATA_USE.md"
+               target="_blank" rel="noopener noreferrer">
+              Read the repository's data-use guidance ↗
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <section class="paper-section" id="acknowledgments">
+        <h2 class="section-title">Acknowledgments and Data Credit</h2>
+        <p>
+          This capstone was developed as part of the FlyRank ML Internship
+          using the approved internship dataset.
+        </p>
+        <p>
+          <a href="https://flyrank.ai"
+             target="_blank" rel="noopener noreferrer">
+            Built on the FlyRank ML Internship dataset
+          </a>
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p><strong>Google Search Ranking &amp; Discoverability</strong></p>
+    <p>Machine Learning Research Capstone · Fareya Hossain</p>
+    <p>
+      Project materials:
+      <a href="https://github.com/fareyahossain835-bit/flyrank-ml">
+        GitHub repository
+      </a>
+    </p>
+  </footer>
+</body>
+</html>
